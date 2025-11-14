@@ -9,21 +9,22 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# COPY csproj vào restore
-COPY *.csproj ./
-RUN dotnet restore
+# COPY csproj để restore
+COPY ["EbayClone.Web/EbayClone.Web.csproj", "EbayClone.Web/"]
+RUN dotnet restore "EbayClone.Web/EbayClone.Web.csproj"
 
 # COPY toàn bộ source
-COPY . ./
-RUN dotnet build -c $BUILD_CONFIGURATION -o /app/build
+COPY . .
+WORKDIR "/src/EbayClone.Web"
+RUN dotnet build "EbayClone.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "EbayClone.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final stage
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish ./
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EbayClone.Web.dll"]
