@@ -1,4 +1,4 @@
-using EbayClone.Web.Models;
+﻿using EbayClone.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -11,27 +11,37 @@ public class HomeController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<HomeController> _logger;
+    private readonly IConfiguration _configuration;
     private readonly string ApiBaseUrl;
+
     public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
-        ApiBaseUrl = configuration["ApiBaseUrl"] ?? "http://localhost:5268/api";
+        _configuration = configuration;
+        ApiBaseUrl = configuration["ApiBaseUrl"] ?? "http://localhost:5268/api/";
+        
+        // Đảm bảo ApiBaseUrl kết thúc bằng /
+        if (!ApiBaseUrl.EndsWith("/"))
+        {
+            ApiBaseUrl += "/";
+        }
     }
-    private readonly IConfiguration _configuration;
 
-    public async Task<IActionResult> Index(int? page, int? pagination,string? search, string? categoryId,string? orderBy,string? order)
+    public async Task<IActionResult> Index(int? page, int? pagination, string? search, string? categoryId, string? orderBy, string? order)
     {
         if (!page.HasValue) page = 1;
         if (!pagination.HasValue) pagination = 16;
+        
         var client = _httpClientFactory.CreateClient();
         string requestUrl = $"{ApiBaseUrl}Product?" +
                         $"page={page}&" +
                         $"pagination={pagination}&" +
-                        $"search={search }&" +
+                        $"search={search}&" +
                         $"categoryId={categoryId}&" +
-                        $"orderBy={orderBy }&" +
+                        $"orderBy={orderBy}&" +
                         $"order={order}";
+        
         var response = await client.GetAsync(requestUrl);
         var json = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions
@@ -39,14 +49,17 @@ public class HomeController : Controller
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
         };
+        
         Console.WriteLine("pro" + json);
         var products = JsonSerializer.Deserialize<ProductResponse>(json, options);
+        
         string requestUrl2 = $"{ApiBaseUrl}Product/category";
         var response2 = await client.GetAsync(requestUrl2);
         var json2 = await response2.Content.ReadAsStringAsync();
         Console.WriteLine("cat" + json2);
         var categories = JsonSerializer.Deserialize<List<Category>>(json2, options);
-        if (products.Total%pagination!=0)
+        
+        if (products.Total % pagination != 0)
         {
             ViewBag.TotalPages = products.Total / pagination + 1;
         }
@@ -54,6 +67,7 @@ public class HomeController : Controller
         {
             ViewBag.TotalPages = products.Total / pagination;
         }
+        
         ViewBag.CurrentPage = page.Value;
         ViewBag.Pagination = pagination;
         ViewBag.Search = search;
@@ -61,6 +75,7 @@ public class HomeController : Controller
         ViewBag.OrderBy = orderBy;
         ViewBag.Order = order;
         ViewBag.Categories = categories;
+        
         return View(products.Data);
     }
 
@@ -81,6 +96,7 @@ public class HomeController : Controller
         {
             return NotFound();
         }
+        
         ViewBag.SellerName = product.sellerName;
         return View(product.product);
     }
@@ -88,30 +104,33 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel model)
     {
-
         try
         {
             var orders = new Order();
-            orders.UserId=model.UserId;
+            orders.UserId = model.UserId;
             decimal total = 0;
-            foreach(var item in model.Items)
+            
+            foreach (var item in model.Items)
             {
                 item.orderId = orders.OrderId;
                 total = total + item.Quantity * item.Price;
             }
+            
             orders.Items = model.Items;
             orders.ShippingAddress = model.ShippingAddress;
             orders.Status = OrderStatus.PendingPayment;
             orders.ShippingRegion = model.ShippingRegion;
             orders.TotalAmount = total;
-            orders.UserId = "1AEA426A-718D-4726-965C-90948EB39BBB";
-            var client = _httpClientFactory.CreateClient("EbayAPI");
+            orders.UserId = "BB3E0745-D5DB-4169-8F36-E2602195B364";
+            
+            var client = _httpClientFactory.CreateClient();
             var json = JsonSerializer.Serialize(orders);
             Console.WriteLine(json);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("orders", content);
+            // Sửa URL để sử dụng ApiBaseUrl
+            var response = await client.PostAsync($"{ApiBaseUrl}orders", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -139,8 +158,11 @@ public class HomeController : Controller
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("EbayAPI");
-            var response = await client.GetAsync($"orders/{id}");
+            // Truyền ApiBaseUrl xuống View để JavaScript sử dụng
+            ViewData["ApiBaseUrl"] = ApiBaseUrl.TrimEnd('/');
+            
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.GetAsync($"{ApiBaseUrl}orders/{id}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -167,8 +189,8 @@ public class HomeController : Controller
         try
         {
             var userId = "buyer@example.com"; // In production, get from authentication
-            var client = _httpClientFactory.CreateClient("EbayAPI");
-            var response = await client.GetAsync($"orders/user/{userId}");
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.GetAsync($"{ApiBaseUrl}orders/user/{userId}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -195,8 +217,8 @@ public class HomeController : Controller
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("EbayAPI");
-            var response = await client.PostAsync($"orders/{orderId}/payment/initiate", null);
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.PostAsync($"{ApiBaseUrl}orders/{orderId}/payment/initiate", null);
 
             if (response.IsSuccessStatusCode)
             {
@@ -232,12 +254,12 @@ public class HomeController : Controller
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("EbayAPI");
+            var client = _httpClientFactory.CreateClient();
             var payload = new { PayPalOrderId = paypalOrderId };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync($"orders/{orderId}/payment/complete", content);
+            var response = await client.PostAsync($"{ApiBaseUrl}orders/{orderId}/payment/complete", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -261,7 +283,8 @@ public class HomeController : Controller
         public int Total { get; set; }
         public List<Product> Data { get; set; } = new();
     }
-    private class  ProductDto
+    
+    private class ProductDto
     {
         public Product product { get; set; }
         public string sellerName { get; set; }

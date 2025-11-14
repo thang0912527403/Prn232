@@ -1,0 +1,138 @@
+2025-11-14 22:29:34.204 +07:00 [INF] Starting EbayClone.API
+2025-11-14 22:29:34.342 +07:00 [INF] RabbitMQ connection established
+2025-11-14 22:29:34.362 +07:00 [INF] Order Timeout Background Service started
+2025-11-14 22:29:34.440 +07:00 [INF] Escrow Release Background Service started
+2025-11-14 22:29:34.447 +07:00 [INF] EmailConsumerService started
+2025-11-14 22:29:34.452 +07:00 [INF] Started consuming from order.email
+2025-11-14 22:29:47.122 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.144 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.149 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.199 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.203 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.205 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.210 +07:00 [WRN] Navigations 'PaymentInfo.Order' and 'Order.Payment' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.214 +07:00 [WRN] Navigations 'PaymentInfo.Order' and 'Order.Payment' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.217 +07:00 [WRN] Navigations 'PaymentInfo.Order' and 'Order.Payment' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.221 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.224 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.226 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.230 +07:00 [WRN] Navigations 'ShippingInfo.Order' and 'Order.Shipping' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.233 +07:00 [WRN] Navigations 'ShippingInfo.Order' and 'Order.Shipping' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.236 +07:00 [WRN] Navigations 'ShippingInfo.Order' and 'Order.Shipping' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.239 +07:00 [WRN] Navigations 'Order.Escrow' and 'EscrowInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.243 +07:00 [WRN] Navigations 'Order.Escrow' and 'EscrowInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.245 +07:00 [WRN] Navigations 'Order.Escrow' and 'EscrowInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.249 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.252 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.254 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 22:29:47.373 +07:00 [WRN] No store type was specified for the decimal property 'DiscountAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-14 22:29:47.375 +07:00 [WRN] No store type was specified for the decimal property 'ShippingFee' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-14 22:29:47.377 +07:00 [WRN] No store type was specified for the decimal property 'Rating' on entity type 'User'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-14 22:29:50.619 +07:00 [INF] Order created: 604427e4-928f-4959-b041-c9f35d3609b3, Total: $470.00
+2025-11-14 22:30:51.176 +07:00 [INF] Escrow created for order 604427e4-928f-4959-b041-c9f35d3609b3: Amount=$470.00, ReleaseDate=2025-12-05, Period=21 days
+2025-11-14 22:30:51.178 +07:00 [INF] Payment completed for order 604427e4-928f-4959-b041-c9f35d3609b3: CaptureId=0XB32547YN098613A
+2025-11-14 22:30:51.240 +07:00 [INF] Bắt đầu gửi email tới BB3E0745-D5DB-4169-8F36-E2602195B364 với subject: Payment Confirmed - Order #604427e4-928f-4959-b041-c9f35d3609b3
+2025-11-14 22:30:51.242 +07:00 [INF] 
+=== EMAIL SENT ===
+To: BB3E0745-D5DB-4169-8F36-E2602195B364
+Subject: Payment Confirmed - Order #604427e4-928f-4959-b041-c9f35d3609b3
+Body: 
+                <html>
+                <body style='font-family: Arial, sans-serif;'>
+                    <h2>Payment Successful!</h2>
+                    <p>Dear Customer,</p>
+                 ...
+==================
+2025-11-14 22:30:51.250 +07:00 [ERR] Failed to send email
+System.FormatException: The specified string is not in the form required for an e-mail address.
+   at System.Net.Mail.MailAddressParser.TryReadCfwsAndThrowIfIncomplete(String data, Int32 index, Int32& outIndex, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseDomain(String data, Int32& index, String& domain, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseAddress(String data, Boolean expectMultipleAddresses, Int32& index, ParseAddressInfo& parseAddressInfo, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.ParseMultipleAddresses(String data)
+   at System.Net.Mail.MailAddressCollection.ParseValue(String addresses)
+   at EbayClone.API.Services.EmailService.SendEmailAsync(String to, String subject, String body) in C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\Services\EmailService.cs:line 287
+2025-11-14 22:30:51.257 +07:00 [ERR] Failed to send payment confirmation email for order 604427e4-928f-4959-b041-c9f35d3609b3
+System.FormatException: The specified string is not in the form required for an e-mail address.
+   at System.Net.Mail.MailAddressParser.TryReadCfwsAndThrowIfIncomplete(String data, Int32 index, Int32& outIndex, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseDomain(String data, Int32& index, String& domain, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseAddress(String data, Boolean expectMultipleAddresses, Int32& index, ParseAddressInfo& parseAddressInfo, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.ParseMultipleAddresses(String data)
+   at System.Net.Mail.MailAddressCollection.ParseValue(String addresses)
+   at EbayClone.API.Services.EmailService.SendEmailAsync(String to, String subject, String body) in C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\Services\EmailService.cs:line 287
+   at EbayClone.API.Services.EmailService.SendPaymentConfirmationEmailAsync(Order order) in C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\Services\EmailService.cs:line 73
+2025-11-14 22:30:51.263 +07:00 [INF] Published message to order.email.*: {"To":"hoan0912527403@gmail.com","Subject":"Payment Confirmed - Order #604427e4-928f-4959-b041-c9f35d3609b3","Body":"Payment successful"}
+2025-11-14 22:30:51.336 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-11-14 22:30:51.338 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-11-14 22:31:03.442 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-11-14 22:31:03.444 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-11-14 23:30:40.574 +07:00 [INF] Starting EbayClone.API
+2025-11-14 23:30:40.739 +07:00 [INF] RabbitMQ connection established
+2025-11-14 23:30:40.759 +07:00 [INF] Order Timeout Background Service started
+2025-11-14 23:30:40.841 +07:00 [INF] Escrow Release Background Service started
+2025-11-14 23:30:40.846 +07:00 [INF] EmailConsumerService started
+2025-11-14 23:30:40.851 +07:00 [INF] Started consuming from order.email
+2025-11-14 23:30:40.901 +07:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address http://[::1]:5268: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+ ---> System.Net.Sockets.SocketException (10048): Only one usage of each socket address (protocol/network address/port) is normally permitted.
+   at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-11-14 23:30:40.927 +07:00 [ERR] BackgroundService failed
+System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at EbayClone.API.OrderTimeoutBackgroundService.ExecuteAsync(CancellationToken stoppingToken) in C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\Services\BackgroundService.cs:line 41
+   at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+2025-11-14 23:30:40.928 +07:00 [ERR] BackgroundService failed
+System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at EbayClone.API.EscrowReleaseBackgroundService.ExecuteAsync(CancellationToken stoppingToken) in C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\Services\BackgroundService.cs:line 78
+   at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+2025-11-14 23:30:40.928 +07:00 [FTL] Application terminated unexpectedly
+System.IO.IOException: Failed to bind to address http://[::1]:5268: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+ ---> System.Net.Sockets.SocketException (10048): Only one usage of each socket address (protocol/network address/port) is normally permitted.
+   at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at Program.<Main>$(String[] args) in C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\Program.cs:line 132

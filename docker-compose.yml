@@ -27,11 +27,11 @@ services:
 
   api:
     build:
-      context: .
-      dockerfile: EbayClone.API/Dockerfile
+      context: ./EbayClone.API
+      dockerfile: Dockerfile
     container_name: ebay-api
     ports:
-      - "7001:80"
+      - "5268:80"
     networks:
       - ebay-network
     environment:
@@ -44,11 +44,10 @@ services:
       - sqlserver
       - rabbitmq
     restart: unless-stopped
-
   web:
     build:
-      context: .
-      dockerfile: EbayClone.Web/Dockerfile
+      context: ./EbayClone.Web
+      dockerfile: Dockerfile
     container_name: ebay-web
     ports:  
       - "5001:80"
@@ -60,7 +59,6 @@ services:
     depends_on:
       - api
     restart: unless-stopped
-
   nginx:
     image: nginx:alpine
     container_name: ebay-nginx
