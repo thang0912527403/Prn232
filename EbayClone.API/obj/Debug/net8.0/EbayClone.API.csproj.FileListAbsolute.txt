@@ -349,3 +349,4 @@ C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\obj\Debug\net8.0\refint\EbayClone
 C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\obj\Debug\net8.0\EbayClone.API.pdb
 C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\obj\Debug\net8.0\EbayClone.API.genruntimeconfig.cache
 C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\obj\Debug\net8.0\ref\EbayClone.API.dll
+C:\KienZone\gitClone\prn2\Prn232\EbayClone.API\bin\Debug\net8.0\BCrypt.Net-Next.dll

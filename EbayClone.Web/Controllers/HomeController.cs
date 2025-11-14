@@ -27,7 +27,11 @@ public class HomeController : Controller
             ApiBaseUrl += "/";
         }
     }
-
+    [Route("Account/Login")]
+    public async Task<IActionResult> Login()
+    {
+        return View();
+    }
     public async Task<IActionResult> Index(int? page, int? pagination, string? search, string? categoryId, string? orderBy, string? order)
     {
         if (!page.HasValue) page = 1;
