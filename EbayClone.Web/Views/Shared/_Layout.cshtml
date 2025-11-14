@@ -340,3 +340,29 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    // Sync localStorage to cookie để server có thể đọc
+    function syncAuthToCookie() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+
+        if (token && userInfo) {
+            const user = JSON.parse(userInfo);
+
+            // Set cookies với expiry 7 ngày
+            const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+            document.cookie = `token=${token}; expires=${expires}; path=/; SameSite=Lax`;
+            document.cookie = `userId=${user.userId}; expires=${expires}; path=/; SameSite=Lax`;
+        } else {
+            // Xóa cookies nếu không có token
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+    }
+
+    // Gọi khi trang load
+    syncAuthToCookie();
+
+    // Sync lại khi localStorage thay đổi
+    window.addEventListener('storage', syncAuthToCookie);
+</script>

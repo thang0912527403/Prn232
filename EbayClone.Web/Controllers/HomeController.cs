@@ -1,7 +1,6 @@
-﻿using EbayClone.Web.Models;
+﻿
+using EbayClone.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Json;
 
@@ -20,23 +19,50 @@ public class HomeController : Controller
         _logger = logger;
         _configuration = configuration;
         ApiBaseUrl = configuration["ApiBaseUrl"] ?? "http://localhost:5268/api/";
-        
-        // Đảm bảo ApiBaseUrl kết thúc bằng /
+
         if (!ApiBaseUrl.EndsWith("/"))
         {
             ApiBaseUrl += "/";
         }
     }
+
+    // Helper method để lấy userId từ claims hoặc cookie
+    private string? GetCurrentUserId()
+    {
+        // Lấy từ cookie nếu có
+        if (Request.Cookies.TryGetValue("userId", out var userId))
+        {
+            return userId;
+        }
+        return null;
+    }
+
+    // Helper method để tạo HttpClient với Authorization header
+    private HttpClient CreateAuthenticatedClient()
+    {
+        var client = _httpClientFactory.CreateClient();
+
+        // Lấy token từ cookie
+        if (Request.Cookies.TryGetValue("token", out var token))
+        {
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
+
+        return client;
+    }
+
     [Route("Account/Login")]
-    public async Task<IActionResult> Login()
+    public IActionResult Login()
     {
         return View();
     }
+
     public async Task<IActionResult> Index(int? page, int? pagination, string? search, string? categoryId, string? orderBy, string? order)
     {
         if (!page.HasValue) page = 1;
         if (!pagination.HasValue) pagination = 16;
-        
+
         var client = _httpClientFactory.CreateClient();
         string requestUrl = $"{ApiBaseUrl}Product?" +
                         $"page={page}&" +
@@ -45,7 +71,7 @@ public class HomeController : Controller
                         $"categoryId={categoryId}&" +
                         $"orderBy={orderBy}&" +
                         $"order={order}";
-        
+
         var response = await client.GetAsync(requestUrl);
         var json = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions
@@ -53,16 +79,14 @@ public class HomeController : Controller
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
         };
-        
-        Console.WriteLine("pro" + json);
+
         var products = JsonSerializer.Deserialize<ProductResponse>(json, options);
-        
+
         string requestUrl2 = $"{ApiBaseUrl}Product/category";
         var response2 = await client.GetAsync(requestUrl2);
         var json2 = await response2.Content.ReadAsStringAsync();
-        Console.WriteLine("cat" + json2);
         var categories = JsonSerializer.Deserialize<List<Category>>(json2, options);
-        
+
         if (products.Total % pagination != 0)
         {
             ViewBag.TotalPages = products.Total / pagination + 1;
@@ -71,7 +95,7 @@ public class HomeController : Controller
         {
             ViewBag.TotalPages = products.Total / pagination;
         }
-        
+
         ViewBag.CurrentPage = page.Value;
         ViewBag.Pagination = pagination;
         ViewBag.Search = search;
@@ -79,7 +103,7 @@ public class HomeController : Controller
         ViewBag.OrderBy = orderBy;
         ViewBag.Order = order;
         ViewBag.Categories = categories;
-        
+
         return View(products.Data);
     }
 
@@ -100,7 +124,7 @@ public class HomeController : Controller
         {
             return NotFound();
         }
-        
+
         ViewBag.SellerName = product.sellerName;
         return View(product.product);
     }
@@ -110,30 +134,33 @@ public class HomeController : Controller
     {
         try
         {
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["Error"] = "Please login to create an order";
+                return RedirectToAction("Login", "Account");
+            }
+
             var orders = new Order();
-            orders.UserId = model.UserId;
+            orders.UserId = userId; // Sử dụng userId từ authentication
             decimal total = 0;
-            
+
             foreach (var item in model.Items)
             {
                 item.orderId = orders.OrderId;
                 total = total + item.Quantity * item.Price;
             }
-            
+
             orders.Items = model.Items;
             orders.ShippingAddress = model.ShippingAddress;
             orders.Status = OrderStatus.PendingPayment;
             orders.ShippingRegion = model.ShippingRegion;
             orders.TotalAmount = total;
-            orders.UserId = "BB3E0745-D5DB-4169-8F36-E2602195B364";
-            
-            var client = _httpClientFactory.CreateClient();
-            var json = JsonSerializer.Serialize(orders);
-            Console.WriteLine(json);
 
+            var client = CreateAuthenticatedClient();
+            var json = JsonSerializer.Serialize(orders);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // Sửa URL để sử dụng ApiBaseUrl
             var response = await client.PostAsync($"{ApiBaseUrl}orders", content);
 
             if (response.IsSuccessStatusCode)
@@ -162,10 +189,9 @@ public class HomeController : Controller
     {
         try
         {
-            // Truyền ApiBaseUrl xuống View để JavaScript sử dụng
             ViewData["ApiBaseUrl"] = ApiBaseUrl.TrimEnd('/');
-            
-            var client = _httpClientFactory.CreateClient();
+
+            var client = CreateAuthenticatedClient();
             var response = await client.GetAsync($"{ApiBaseUrl}orders/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -192,8 +218,14 @@ public class HomeController : Controller
     {
         try
         {
-            var userId = "buyer@example.com"; // In production, get from authentication
-            var client = _httpClientFactory.CreateClient();
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["Error"] = "Please login to view your orders";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var client = CreateAuthenticatedClient();
             var response = await client.GetAsync($"{ApiBaseUrl}orders/user/{userId}");
 
             if (response.IsSuccessStatusCode)
@@ -221,7 +253,7 @@ public class HomeController : Controller
     {
         try
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = CreateAuthenticatedClient();
             var response = await client.PostAsync($"{ApiBaseUrl}orders/{orderId}/payment/initiate", null);
 
             if (response.IsSuccessStatusCode)
@@ -230,7 +262,6 @@ public class HomeController : Controller
                 var result = JsonSerializer.Deserialize<JsonElement>(json);
                 var paypalOrderId = result.GetProperty("paypalOrderId").GetString();
 
-                // In production, redirect to PayPal approval URL
                 TempData["PayPalOrderId"] = paypalOrderId;
                 return RedirectToAction("PaymentApproval", new { orderId, paypalOrderId });
             }
@@ -258,7 +289,7 @@ public class HomeController : Controller
     {
         try
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = CreateAuthenticatedClient();
             var payload = new { PayPalOrderId = paypalOrderId };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -287,7 +318,7 @@ public class HomeController : Controller
         public int Total { get; set; }
         public List<Product> Data { get; set; } = new();
     }
-    
+
     private class ProductDto
     {
         public Product product { get; set; }
