@@ -1,0 +1,84 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Password123
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    networks:
+      - ebay-network
+    volumes:
+      - sqldata:/var/opt/mssql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ebay-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ebay-network
+
+  api:
+    build:
+      context: .
+      dockerfile: EbayClone.API/Dockerfile
+    container_name: ebay-api
+    ports:
+      - "7001:80"
+    networks:
+      - ebay-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=EbayDB;User Id=sa;Password=YourStrong@Password123;TrustServerCertificate=True;MultipleActiveResultSets=true;Encrypt=False
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      - sqlserver
+      - rabbitmq
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: EbayClone.Web/Dockerfile
+    container_name: ebay-web
+    ports:  
+      - "5001:80"
+    networks:
+      - ebay-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ApiBaseUrl=http://api:80/api/
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: ebay-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - ebay-network
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+      - api
+    restart: unless-stopped
+
+networks:
+  ebay-network:
+    driver: bridge
+
+volumes:
+  sqldata:

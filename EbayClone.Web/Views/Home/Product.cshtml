@@ -1,0 +1,113 @@
+﻿@model EbayClone.Web.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Name">
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-3">@Model.Name</h1>
+            <div class="mb-3">
+                <span class="badge bg-success me-2">
+                    <i class="fas fa-star"></i> @Model.SellerRating Seller Rating
+                </span>
+                <span class="badge bg-primary">
+                    <i class="fas fa-tag"></i> @Model.Category
+                </span>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="text-danger mb-0">$@Model.Price.ToString("N2")</h2>
+                    <p class="text-muted">+ Shipping calculated at checkout</p>
+                </div>
+            </div>
+
+            <p class="lead">@Model.Description</p>
+
+            <form asp-action="CreateOrder" method="post" id="orderForm">
+                <input type="hidden" name="UserId" value="buyer@example.com" />
+                <input type="hidden" name="SellerId" value="@Model.SellerId" />
+                <input type="hidden" name="SellerRating" value="@Model.SellerRating" />
+                <input type="hidden" name="Items[0].ProductId" value="@Model.productId" />
+                <input type="hidden" name="Items[0].ProductName" value="@Model.Name" />
+                <input type="hidden" name="Items[0].Price" value="@Model.Price" />
+
+                <div class="mb-3">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" name="Items[0].Quantity" class="form-control" value="1" min="1" max="10" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Shipping Address</label>
+                    <textarea name="ShippingAddress" class="form-control" rows="3" required placeholder="Enter your full address"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Shipping Region</label>
+                    <select name="ShippingRegion" class="form-select" required>
+                        <option value="Hanoi">Hanoi - $20</option>
+                        <option value="HoChiMinh">Ho Chi Minh - $25</option>
+                        <option value="DaNang">Da Nang - $30</option>
+                        <option value="Domestic">Other Domestic - $35</option>
+                        <option value="International">International - $100</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Coupon Code (Optional)</label>
+                    <input type="text" name="CouponCode" class="form-control" placeholder="Enter coupon code" />
+                    <small class="text-muted">Try: SAVE10, SAVE20, or FREESHIP</small>
+                </div>
+
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-shield-alt"></i> Escrow Protection</h6>
+                    <p class="mb-0 small">
+                        Your payment will be held securely for
+                        @if (Model.SellerRating >= 4.8m)
+                        {
+                            <strong>7 days</strong>
+                        }
+                        else if (Model.SellerRating >= 4.5m)
+                        {
+
+                            <strong>14 days</strong>
+                        }
+                        else
+                        {
+
+                            <strong>21 days</strong>
+                        }
+                        after delivery. You can dispute within this period if there are any issues.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-shopping-cart"></i> Buy Now with PayPal
+                </button>
+            </form>
+
+            <div class="mt-4">
+                <h5>Seller Information</h5>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="mb-1"><i class="fas fa-user"></i> <strong>@ViewBag.SellerName</strong></p>
+                        <p class="mb-0">
+                            <i class="fas fa-star text-warning"></i> Rating: @Model.SellerRating/5.0
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

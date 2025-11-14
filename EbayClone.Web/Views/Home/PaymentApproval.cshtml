@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Complete Payment";
+    var orderId = ViewBag.OrderId;
+    var paypalOrderId = ViewBag.PayPalOrderId;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fab fa-paypal fa-5x text-primary"></i>
+                        <h2 class="mt-3">Complete Your Payment</h2>
+                        <p class="text-muted">Order #@orderId.ToString().Substring(0, 8)</p>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Secure Payment:</strong> Your payment will be held in escrow until the order is delivered successfully.
+                    </div>
+
+                    <div id="paypal-button-container"></div>
+
+                    <div class="text-center mt-4">
+                        <a href="/Home/OrderDetails?id=@orderId" class="btn btn-link">
+                            <i class="fas fa-arrow-left"></i> Return to Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6><i class="fas fa-shield-alt text-success"></i> Why use PayPal?</h6>
+                    <ul class="mb-0">
+                        <li>Secure payment processing</li>
+                        <li>Buyer protection included</li>
+                        <li>No need to share card details</li>
+                        <li>Easy refund process if needed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                // Use the PayPal order ID created by our API
+                return '@paypalOrderId';
+            },
+            onApprove: function(data, actions) {
+                // Show loading
+                document.getElementById('paypal-button-container').innerHTML =
+                    '<div class="text-center"><i class="fas fa-spinner fa-spin fa-3x text-primary"></i><p class="mt-3">Processing payment...</p></div>';
+
+                // Call our API to complete the payment
+                fetch('/Home/CompletePayment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'orderId=@orderId&paypalOrderId=@paypalOrderId'
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        // Redirect to order details with success message
+                        window.location.href = '/Home/OrderDetails?id=@orderId';
+                    } else {
+                        alert('Payment processing failed. Please try again.');
+                        location.reload();
+                    }
+                })
+                .catch(function(error) {
+                    alert('An error occurred. Please try again.');
+                    location.reload();
+                });
+            },
+            onCancel: function(data) {
+                alert('Payment cancelled. You can try again when ready.');
+                window.location.href = '/Home/OrderDetails?id=@orderId';
+            },
+            onError: function(err) {
+                alert('An error occurred during payment. Please try again.');
+                console.error(err);
+            }
+        }).render('#paypal-button-container');
+    </script>
+}

@@ -1,0 +1,263 @@
+﻿@using EbayClone.Web.Models
+@model List<EbayClone.Web.Models.Order>
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="fas fa-tasks"></i> Order Management</h2>
+            <p class="text-muted">View and manage all orders</p>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5>Total Orders</h5>
+                    <h2>@Model.Count</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5>Pending Payment</h5>
+                    <h2>@Model.Count(o => o.Status == OrderStatus.PendingPayment)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5>Processing</h5>
+                    <h2>@Model.Count(o => o.Status == OrderStatus.Paid || o.Status == OrderStatus.Processing)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5>Delivered</h5>
+                    <h2>@Model.Count(o => o.Status == OrderStatus.Delivered)</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Escrow</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            var statusClass = order.Status switch
+                            {
+                                OrderStatus.PendingPayment => "warning",
+                                OrderStatus.Paid => "info",
+                                OrderStatus.Processing => "info",
+                                OrderStatus.Shipped => "primary",
+                                OrderStatus.Delivered => "success",
+                                OrderStatus.Cancelled => "secondary",
+                                OrderStatus.Refunded => "danger",
+                                _ => "secondary"
+                            };
+
+                            <tr>
+                                <td><small>@order.OrderId.Substring(0, 8)</small></td>
+                                <td>@order.UserId</td>
+                                <td>
+                                    <small>
+                                        @foreach (var item in order.Items.Take(2))
+                                        {
+                                            <div> Productname x Product quantity</div>
+                                        }
+                                        @if (order.Items.Count > 2)
+                                        {
+                                            <span class="text-muted">+@(order.Items.Count - 2) more</span>
+                                        }
+                                    </small>
+                                </td>
+                                <td><strong>$@order.TotalAmount.ToString("N2")</strong></td>
+                                <td>
+                                    <span class="badge bg-@statusClass">@order.Status</span>
+                                </td>
+                                <td>
+                                    @if (order.Escrow != null)
+                                    {
+                                        @if (order.Escrow.Status == "Held")
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-lock"></i> Held
+                                            </span>
+                                            <br />
+                                            <small class="text-muted">
+                                                Until @order.Escrow.ReleaseDate.ToString("MM/dd")
+                                            </small>
+                                        }
+                                        else if (order.Escrow.Status == "Released")
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Released
+                                            </span>
+                                        }
+                                        else if (order.Escrow.Status == "Refunded")
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-undo"></i> Refunded
+                                            </span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <small>@order.CreatedAt.ToString("MM/dd/yyyy")</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="/Home/OrderDetails?id=@order.OrderId" class="btn btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        @if (order.Status == OrderStatus.Paid || order.Status == OrderStatus.Processing)
+                                        {
+                                            <button type="button" class="btn btn-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#shipModal"
+                                                    data-order-id="@order.OrderId">
+                                                <i class="fas fa-shipping-fast"></i>
+                                            </button>
+                                        }
+
+                                        @if (order.Status == OrderStatus.Shipped)
+                                        {
+                                            <button type="button" class="btn btn-success"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#updateModal"
+                                                    data-order-id="@order.OrderId">
+                                                <i class="fas fa-truck"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ship Order Modal -->
+<div class="modal fade" id="shipModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="ShipOrder" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ship Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="orderId" id="shipOrderId" />
+                    <div class="mb-3">
+                        <label class="form-label">Carrier</label>
+                        <select name="carrier" class="form-select" required>
+                            <option value="Vietnam Post">Vietnam Post</option>
+                            <option value="Giao Hang Nhanh">Giao Hang Nhanh</option>
+                            <option value="Giao Hang Tiet Kiem">Giao Hang Tiet Kiem</option>
+                            <option value="Viettel Post">Viettel Post</option>
+                            <option value="J&T Express">J&T Express</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tracking Number</label>
+                        <input type="text" name="trackingNumber" class="form-control" required
+                               placeholder="Enter tracking number" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-shipping-fast"></i> Ship Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Shipping Status Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="UpdateShippingStatus" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Shipping Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="orderId" id="updateOrderId" />
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select" required>
+                            <option value="Shipped">Shipped</option>
+                            <option value="InTransit">In Transit</option>
+                            <option value="OutForDelivery">Out for Delivery</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Failed">Delivery Failed</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-control" required
+                               placeholder="Current location" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2" required
+                                  placeholder="Status description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Update Status
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Handle ship modal
+        document.getElementById('shipModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var orderId = button.getAttribute('data-order-id');
+            document.getElementById('shipOrderId').value = orderId;
+        });
+
+        // Handle update modal
+        document.getElementById('updateModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var orderId = button.getAttribute('data-order-id');
+            document.getElementById('updateOrderId').value = orderId;
+        });
+    </script>
+}

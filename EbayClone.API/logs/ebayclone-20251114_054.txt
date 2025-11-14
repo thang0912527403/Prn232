@@ -1,0 +1,83 @@
+2025-11-14 09:30:41.036 +07:00 [INF] Starting EbayClone.API
+2025-11-14 09:30:41.254 +07:00 [INF] RabbitMQ connection established
+2025-11-14 09:30:41.303 +07:00 [INF] Order Timeout Background Service started
+2025-11-14 09:30:41.542 +07:00 [INF] Escrow Release Background Service started
+2025-11-14 09:30:41.552 +07:00 [INF] EmailConsumerService started
+2025-11-14 09:30:41.559 +07:00 [INF] Started consuming from order.email
+2025-11-14 09:30:51.637 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.691 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.700 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.786 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.791 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.795 +07:00 [WRN] Navigations 'Order.Payment' and 'PaymentInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.805 +07:00 [WRN] Navigations 'PaymentInfo.Order' and 'Order.Payment' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.809 +07:00 [WRN] Navigations 'PaymentInfo.Order' and 'Order.Payment' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.815 +07:00 [WRN] Navigations 'PaymentInfo.Order' and 'Order.Payment' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.821 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.824 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.830 +07:00 [WRN] Navigations 'Order.Shipping' and 'ShippingInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.835 +07:00 [WRN] Navigations 'ShippingInfo.Order' and 'Order.Shipping' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.839 +07:00 [WRN] Navigations 'ShippingInfo.Order' and 'Order.Shipping' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.845 +07:00 [WRN] Navigations 'ShippingInfo.Order' and 'Order.Shipping' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.850 +07:00 [WRN] Navigations 'Order.Escrow' and 'EscrowInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.855 +07:00 [WRN] Navigations 'Order.Escrow' and 'EscrowInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.860 +07:00 [WRN] Navigations 'Order.Escrow' and 'EscrowInfo.Order' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.865 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.868 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:51.876 +07:00 [WRN] Navigations 'EscrowInfo.Order' and 'Order.Escrow' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.
+2025-11-14 09:30:52.062 +07:00 [WRN] No store type was specified for the decimal property 'DiscountAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-14 09:30:52.066 +07:00 [WRN] No store type was specified for the decimal property 'ShippingFee' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-14 09:30:52.069 +07:00 [WRN] No store type was specified for the decimal property 'Rating' on entity type 'User'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-14 09:30:52.739 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-11-14 09:30:52.742 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-11-14 09:30:59.772 +07:00 [INF] Order created: 22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6, Total: £1,000.00
+2025-11-14 09:31:11.714 +07:00 [INF] Escrow created for order 22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6: Amount=£1,000.00, ReleaseDate=2025-12-05, Period=21 days
+2025-11-14 09:31:11.717 +07:00 [INF] Payment completed for order 22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6: CaptureId=4GH79147UG193950G
+2025-11-14 09:31:11.807 +07:00 [INF] 
+=== EMAIL SENT ===
+To: 1AEA426A-718D-4726-965C-90948EB39BBB
+Subject: Payment Confirmed - Order #22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6
+Body: 
+                <html>
+                <body style='font-family: Arial, sans-serif;'>
+                    <h2>Payment Successful!</h2>
+                    <p>Dear Customer,</p>
+                 ...
+==================
+2025-11-14 09:31:11.881 +07:00 [ERR] Failed to send email
+System.FormatException: The specified string is not in the form required for an e-mail address.
+   at System.Net.Mail.MailAddressParser.TryReadCfwsAndThrowIfIncomplete(String data, Int32 index, Int32& outIndex, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseDomain(String data, Int32& index, String& domain, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseAddress(String data, Boolean expectMultipleAddresses, Int32& index, ParseAddressInfo& parseAddressInfo, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.ParseMultipleAddresses(String data)
+   at System.Net.Mail.MailAddressCollection.ParseValue(String addresses)
+   at EbayClone.API.Services.EmailService.SendEmailAsync(String to, String subject, String body) in C:\Users\thang\source\repos\HE186961_DuongXuanThang_Ass1\FUNewsManagementSystem\EbayClone\EbayClone.API\Services\EmailService.cs:line 285
+2025-11-14 09:31:11.979 +07:00 [ERR] Failed to send payment confirmation email for order 22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6
+System.FormatException: The specified string is not in the form required for an e-mail address.
+   at System.Net.Mail.MailAddressParser.TryReadCfwsAndThrowIfIncomplete(String data, Int32 index, Int32& outIndex, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseDomain(String data, Int32& index, String& domain, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.TryParseAddress(String data, Boolean expectMultipleAddresses, Int32& index, ParseAddressInfo& parseAddressInfo, Boolean throwExceptionIfFail)
+   at System.Net.Mail.MailAddressParser.ParseMultipleAddresses(String data)
+   at System.Net.Mail.MailAddressCollection.ParseValue(String addresses)
+   at EbayClone.API.Services.EmailService.SendEmailAsync(String to, String subject, String body) in C:\Users\thang\source\repos\HE186961_DuongXuanThang_Ass1\FUNewsManagementSystem\EbayClone\EbayClone.API\Services\EmailService.cs:line 285
+   at EbayClone.API.Services.EmailService.SendPaymentConfirmationEmailAsync(Order order) in C:\Users\thang\source\repos\HE186961_DuongXuanThang_Ass1\FUNewsManagementSystem\EbayClone\EbayClone.API\Services\EmailService.cs:line 73
+2025-11-14 09:31:11.996 +07:00 [INF] Published message to order.email.*: {"To":"hoan0912527403@gmail.com","Subject":"Payment Confirmed - Order #22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6","Body":"Payment successful"}
+2025-11-14 09:31:12.003 +07:00 [INF] 
+=== EMAIL SENT ===
+To: hoan0912527403@gmail.com
+Subject: Payment Confirmed - Order #22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6
+Body: Payment successful...
+==================
+2025-11-14 09:31:33.480 +07:00 [INF] Starting EbayClone.API
+2025-11-14 09:31:33.720 +07:00 [INF] RabbitMQ connection established
+2025-11-14 09:31:33.780 +07:00 [INF] Order Timeout Background Service started
+2025-11-14 09:31:33.958 +07:00 [INF] Escrow Release Background Service started
+2025-11-14 09:31:33.968 +07:00 [INF] EmailConsumerService started
+2025-11-14 09:31:33.976 +07:00 [INF] Started consuming from order.email
+2025-11-14 09:31:34.081 +07:00 [INF] 
+=== EMAIL SENT ===
+To: hoan0912527403@gmail.com
+Subject: Payment Confirmed - Order #22afc7d1-bf5a-4a1d-a7bf-295b3dff36c6
+Body: Payment successful...
+==================
+2025-11-14 09:31:37.555 +07:00 [INF] Message processed from order.email

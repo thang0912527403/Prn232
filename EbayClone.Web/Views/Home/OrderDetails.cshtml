@@ -1,0 +1,352 @@
+﻿@model EbayClone.Web.Models.Order
+@{
+    ViewData["Title"] = $"Order #{Model.OrderId}";
+
+    var statusClass = Model.Status switch
+    {
+        OrderStatus.PendingPayment => "warning",
+        OrderStatus.Paid => "info",
+        OrderStatus.Processing => "info",
+        OrderStatus.Shipped => "primary",
+        OrderStatus.Delivered => "success",
+        OrderStatus.Cancelled => "secondary",
+        OrderStatus.Refunded => "danger",
+        OrderStatus.Disputed => "danger",
+        _ => "secondary"
+    };
+
+    var statusIcon = Model.Status switch
+    {
+        OrderStatus.PendingPayment => "fa-clock",
+        OrderStatus.Paid => "fa-check-circle",
+        OrderStatus.Processing => "fa-cog fa-spin",
+        OrderStatus.Shipped => "fa-truck",
+        OrderStatus.Delivered => "fa-box-open",
+        OrderStatus.Cancelled => "fa-times-circle",
+        OrderStatus.Refunded => "fa-undo",
+        OrderStatus.Disputed => "fa-exclamation-triangle",
+        _ => "fa-question-circle"
+    };
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-receipt"></i> Order #@Model.OrderId.Substring(0, 8)</h2>
+                <span class="badge bg-@statusClass status-badge">
+                    <i class="fas @statusIcon"></i> @Model.Status
+                </span>
+            </div>
+            <p class="text-muted">Order Date: @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</p>
+        </div>
+    </div>
+
+    @if (Model.Escrow != null && Model.Escrow.Status == "Held")
+    {
+        <div class="escrow-banner">
+            <h5><i class="fas fa-shield-alt"></i> Escrow Protection Active</h5>
+            <p class="mb-2">
+                Your payment of <strong>$@Model.Escrow.Amount.ToString("N2")</strong> is being held securely.
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <small><i class="fas fa-calendar"></i> Held Since: @Model.Escrow.HeldDate.ToString("MMM dd, yyyy")</small>
+                </div>
+                <div class="col-md-6">
+                    <small><i class="fas fa-calendar-check"></i> Release Date: @Model.Escrow.ReleaseDate.ToString("MMM dd, yyyy")</small>
+                </div>
+            </div>
+            <div class="progress mt-2" style="height: 25px;">
+                @{
+                    var totalDays = (Model.Escrow.ReleaseDate - Model.Escrow.HeldDate).TotalDays;
+                    var elapsedDays = (DateTime.UtcNow - Model.Escrow.HeldDate).TotalDays;
+                    var progressPercent = Math.Min(100, (elapsedDays / totalDays) * 100);
+                }
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     style="width: @progressPercent%">
+                    @((int)progressPercent)% - @Model.Escrow.EscrowPeriodDays days escrow period
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-shopping-bag"></i> Order Items</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>Product Name</td>
+                                    <td class="text-center">@item.Quantity</td>
+                                    <td class="text-end">$@item.Price.ToString("N2")</td>
+                                    <td class="text-end"><strong>@(item.Price* item.Quantity)</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Items Total:</strong></td>
+                                <td class="text-end">$@Model.Items.Sum(i => (i.Price * i.Quantity)).ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Shipping Fee:</strong></td>
+                                <td class="text-end">$@Model.ShippingFee.ToString("N2")</td>
+                            </tr>
+                            @if (Model.DiscountAmount > 0)
+                            {
+                                <tr class="table-success">
+                                    <td colspan="3" class="text-end">
+                                        <strong>Discount (@Model.CouponCode):</strong>
+                                    </td>
+                                    <td class="text-end">-$@Model.DiscountAmount.ToString("N2")</td>
+                                </tr>
+                            }
+                            <tr class="table-primary">
+                                <td colspan="3" class="text-end"><h5 class="mb-0">Total Amount:</h5></td>
+                                <td class="text-end"><h5 class="mb-0">$@Model.TotalAmount.ToString("N2")</h5></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            @if (Model.Shipping != null && Model.Shipping.Events.Any())
+            {
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-shipping-fast"></i> Shipping Timeline</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            @foreach (var evt in Model.Shipping.Events.OrderByDescending(e => e.Timestamp))
+                            {
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <h6 class="mb-1">@evt.Status</h6>
+                                    <p class="text-muted small mb-0">
+                                        <i class="fas fa-map-marker-alt"></i> @evt.Location<br />
+                                        <i class="fas fa-clock"></i> @evt.Timestamp.ToString("MMM dd, yyyy HH:mm")<br />
+                                        @evt.Description
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> Order Information</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Order ID:</strong><br /><small>@Model.OrderId</small></p>
+                    <p>
+                        <strong>Status:</strong><br />
+                        <span class="badge bg-@statusClass">@Model.Status</span>
+                    </p>
+                    @if (Model.Payment != null)
+                    {
+                        <p>
+                            <strong>Payment Status:</strong><br />
+                            <span class="badge bg-info">@Model.Payment.Status</span>
+                        </p>
+                        @if (!string.IsNullOrEmpty(Model.Payment.TransactionId))
+                        {
+                            <p><strong>Transaction ID:</strong><br /><small>@Model.Payment.TransactionId</small></p>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0"><i class="fas fa-map-marker-alt"></i> Shipping Address</h6>
+                </div>
+                <div class="card-body">
+                    <p>@Model.ShippingAddress</p>
+                    <p class="mb-0"><strong>Region:</strong> @Model.ShippingRegion</p>
+                </div>
+            </div>
+
+            @if (Model.Shipping != null)
+            {
+                <div class="card mb-3">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0"><i class="fas fa-truck"></i> Shipping Details</h6>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.Shipping.TrackingNumber))
+                        {
+                            <p><strong>Tracking Number:</strong><br />@Model.Shipping.TrackingNumber</p>
+                            <p><strong>Carrier:</strong> @Model.Shipping.Carrier</p>
+                        }
+                        @if (Model.Shipping.EstimatedDelivery != null)
+                        {
+                            <p>
+                                <strong>Estimated Delivery:</strong><br />
+                                @Model.Shipping.EstimatedDelivery.Value.ToString("MMM dd, yyyy")
+                            </p>
+                        }
+                    </div>
+                </div>
+            }
+
+           
+                <div id="paypal-button-container"></div>
+
+
+            @if (Model.Status == OrderStatus.Delivered && Model.Escrow?.Status == "Held")
+            {
+                <button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#disputeModal">
+                    <i class="fas fa-exclamation-triangle"></i> Report an Issue
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Dispute Modal -->
+<div class="modal fade" id="disputeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Report an Issue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/Admin/DisputeOrder" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="orderId" value="@Model.OrderId" />
+                    <div class="mb-3">
+                        <label class="form-label">What's the issue?</label>
+                        <select name="reason" class="form-select" required>
+                            <option value="">Select a reason...</option>
+                            <option value="Item not as described">Item not as described</option>
+                            <option value="Item damaged">Item damaged</option>
+                            <option value="Wrong item received">Wrong item received</option>
+                            <option value="Item not received">Item not received</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-warning">
+                        <small>
+                            <i class="fas fa-info-circle"></i>
+                            A refund will be processed to your PayPal account if the dispute is valid.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Submit Dispute</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AZbDMeC9C2EXsH54RGzIOiGTmal0vRcVMUFDSFLXFaGzS5R4zKx9h69S2E8wbYFIGtl_tu4vdBjaKxlq&components=buttons"></script>
+
+<script>
+    paypal.Buttons({
+        style: {
+            layout: 'vertical',
+            color: 'blue',
+            shape: 'rect',
+            label: 'paypal',
+        },
+
+        createOrder: async function() {
+            try {
+                console.log("Creating PayPal order...");
+
+                const response = await fetch("http://localhost:5268/api/paypal/createpaypalorder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        orderId: "@Model.OrderId",
+                        value: "@Model.TotalAmount.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("API Error:", errorText);
+                    throw new Error("Failed to create PayPal order");
+                }
+
+                const data = await response.json();
+                console.log("PayPal Order Created:", data);
+
+                // QUAN TRỌNG: Phải return về data.id
+                return data.id;
+
+            } catch (error) {
+                console.error("Error creating PayPal order:", error);
+                alert(`Error: ${error.message}`);
+                throw error;
+            }
+        },
+
+        onApprove: async function(data) {
+            try {
+                console.log("Capturing PayPal order:", data.orderID);
+
+                const response = await fetch("http://localhost:5268/api/paypal/capturepaypalorder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        orderId: "@Model.OrderId",
+                        paypalOrderId: data.orderID
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Capture Error:", errorText);
+                    throw new Error("Capture failed");
+                }
+
+                const details = await response.json();
+                console.log("Payment captured successfully:", details);
+
+                alert(`Transaction completed by ${details.payer.name.given_name}`);
+                window.location.href = "/Home/Index";
+
+            } catch (error) {
+                console.error("Error capturing payment:", error);
+                alert("Payment capture failed. Please contact support.");
+            }
+        },
+
+        onError: function(err) {
+            console.error("PayPal Error:", err);
+            alert("An error occurred with PayPal. Please try again.");
+        },
+
+        onCancel: function(data) {
+            console.log("Payment cancelled", data);
+        }
+
+    }).render("#paypal-button-container");
+</script>
