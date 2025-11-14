@@ -9,19 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbayClone.Web", "EbayClone.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		docker-compose.yml = docker-compose.yml
 		Jenkinsfile.txt = Jenkinsfile.txt
 		k8s-deployment.yaml = k8s-deployment.yaml
 		nginx.conf = nginx.conf
 		Readme.md = Readme.md
 		seeddata.sql = seeddata.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{CBF41461-AC2B-498C-ADA1-4D7DB30563DD}"
-	ProjectSection(SolutionItems) = preProject
-		ci-cd.yml = ci-cd.yml
 	EndProjectSection
 EndProject
 Global
@@ -41,9 +35,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{CBF41461-AC2B-498C-ADA1-4D7DB30563DD} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C546F871-C4E7-4405-B4CE-8A14C1433DBF}
