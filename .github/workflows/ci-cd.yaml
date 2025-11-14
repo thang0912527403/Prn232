@@ -88,28 +88,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
-
-      - name: Build and push Docker image
+      - name: Build and push Web image
         uses: docker/build-push-action@v4
         with:
           context: ./EbayClone.Web
           file: ./EbayClone.Web/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.DOCKER_REGISTRY }}/myimage:web
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Build and push API image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./EbayClone.API
+          file: ./EbayClone.API/Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_REGISTRY }}/myimage:api
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+
 
   # Deploy to Kubernetes
   deploy:
