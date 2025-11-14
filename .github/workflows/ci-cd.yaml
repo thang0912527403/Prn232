@@ -174,30 +174,32 @@ jobs:
 
   # Rollback on failure
   rollback:
-  runs-on: ubuntu-latest
-  needs: [deploy, performance-test]
-  if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [deploy, performance-test]
+    if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-  permissions:
-    contents: read
-    packages: write
+    permissions:
+      contents: read
+      packages: write
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup kubectl
-      uses: azure/setup-kubectl@v3
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
 
-    - name: Configure kubectl
-      run: |
-        mkdir -p $HOME/.kube
-        echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+      - name: Configure kubectl
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+          hmod 600 $HOME/.kube/config
 
-    - name: Rollback deployment
-      run: |
-        kubectl rollout undo deployment/api-deployment -n ebayclone
+      - name: Rollback deployment
+        run: |
+          kubectl rollout undo deployment/api-deployment -n ebayclone
 
-    - name: Verify rollback
-      run: |
-        kubectl rollout status deployment/api-deployment -n ebayclone
+      - name: Verify rollback
+        run: |
+          kubectl rollout status deployment/api-deployment -n ebayclone --timeout=5m
+
